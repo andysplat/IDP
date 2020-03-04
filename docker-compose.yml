@@ -23,9 +23,7 @@ services:
       - "mysqldb:db"
 
   client:
-    image: openjdk:11
-    volumes:
-      - ./client:/var
+    build: ./client
     ports:
         - "8081:8081"
     networks:
