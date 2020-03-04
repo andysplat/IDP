@@ -1,0 +1,41 @@
+version: "3"
+services:
+  mysqldb:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    networks:
+      - server-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=flights 
+
+  server:
+    image: openjdk:8
+    ports:
+      - "8080:8080"
+    networks:
+      - server-mysql
+      - client-server
+    depends_on:
+      - mysqldb
+    links:
+      - "mysqldb:db"
+
+  client:
+    image: openjdk:11
+    volumes:
+      - ./client:/var
+    ports:
+        - "8081:8081"
+    networks:
+      - client-server
+    depends_on:
+      - server
+    links:
+      - "server:sv"
+    tty: true
+
+networks:
+  server-mysql:
+  client-server: 
